@@ -1,0 +1,15 @@
+{
+  "name": "mango-backend",
+  "version": "1.0.0",
+  "description": "mango-backend",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "kapil",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.9.2"
+  }
+}
