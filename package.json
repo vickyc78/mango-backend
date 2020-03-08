@@ -10,6 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
-    "mongoose": "^5.9.2"
+    "lodash": "^4.17.15",
+    "mongoose": "^5.9.2",
+    "sendotp": "^1.2.9"
   }
 }

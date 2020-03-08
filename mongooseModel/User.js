@@ -18,3 +18,5 @@ let userSchema = new Schema({
     }
   ]
 });
+
+module.exports = userSchema;

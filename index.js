@@ -7,10 +7,11 @@ let bodyParser = require("body-parser");
 let Schema = mongoose.Schema;
 
 let router = express.Router();
+
 let app = express();
 
 var env = require("./config/env/development");
-console.log("UIGGGGGGGGGGGGGGG", env);
+
 mongoose.connect(env.dbUrl, {
   useUnifiedTopology: true,
   useNewUrlParser: true
@@ -24,6 +25,9 @@ app.listen(port, function() {
   console.log(`App listing on port ${port} !`);
 });
 
+let userRoutes = require("./controllers/UserController");
+app.use("/User", router);
+
 app.use(function(req, res, next) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Credentials", "true");
@@ -34,6 +38,14 @@ app.use(function(req, res, next) {
   );
   next();
 });
+
+userRoutes(router);
+
 app.get("/", function(req, res) {
   res.send("Hello Express");
+});
+
+app.get("/vicky", (req, res) => {
+  res.status(200).send("Hello Express");
+  // res.status(204).json("Hello Express");
 });
