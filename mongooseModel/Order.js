@@ -6,16 +6,35 @@ let orderSchema = new Schema({
     type: Schema.Types.ObjectId,
     index: true
   },
-  orderName: {
-    type: String
-  },
+  // orderName: {
+  //   type: String
+  // },
   status: {
     type: String,
     enum: ["pending", "inProcess", "delivered", "completed"],
     default: pending
   },
-  transactionId: {
-    type: Schema.Types.ObjectId,
-    index: true
-  }
+  // transactionId: {
+  //   type: Schema.Types.ObjectId,
+  //   index: true
+  // },
+  totalOrderAmount: {
+    type: Number
+  },
+  product: [
+    {
+      productId: {
+        type: Schema.Types.ObjectId,
+        index: true
+      },
+      dozen: {
+        type: Number
+      },
+      productAmount: {
+        type: Number
+      }
+    }
+  ]
 });
+
+module.exports = orderSchema;

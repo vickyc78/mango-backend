@@ -16,7 +16,14 @@ let userSchema = new Schema({
         type: String
       }
     }
-  ]
+  ],
+  email: {
+    type: String,
+    unique: true
+  },
+  otp: {
+    type: Number
+  }
 });
 
 module.exports = userSchema;

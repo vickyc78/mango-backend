@@ -26,7 +26,12 @@ app.listen(port, function() {
 });
 
 let userRoutes = require("./controllers/UserController");
+let productRoutes = require("./controllers/ProductController");
+let orderRoutes = require("./controllers/OrderController");
+
 app.use("/User", router);
+app.use("/Product", router);
+app.use("/Order", router);
 
 app.use(function(req, res, next) {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -40,6 +45,8 @@ app.use(function(req, res, next) {
 });
 
 userRoutes(router);
+productRoutes(router);
+orderRoutes(router);
 
 app.get("/", function(req, res) {
   res.send("Hello Express");
