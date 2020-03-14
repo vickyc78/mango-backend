@@ -31,4 +31,24 @@ module.exports = function(router) {
       }
     });
   });
+
+  router.get("/verifyOtp", async (req, res, next) => {
+    try {
+      res.status(200).json(await UserModel.verifyOtp(req.body));
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  });
+
+  router.get("/loginUser", (req, res, next) => {
+    UserModel.loginUser(req.body, (err, login) => {
+      if (err) {
+        res.json({
+          err: err
+        });
+      } else {
+        res.json(login);
+      }
+    });
+  });
 };

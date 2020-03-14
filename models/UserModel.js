@@ -102,7 +102,8 @@ module.exports = {
             },
             {
               $set: {
-                otp: randomNumber
+                otp: randomNumber,
+                expiry: moment().add(1, "d")
               }
             },
             {
@@ -117,18 +118,19 @@ module.exports = {
     );
   },
 
-  verifyOtp: (data, callback) => {
-    User.findOne({
-      otp: data.otp
-    }).exec((err, otpData) => {
-      if (err) {
-        callback(err);
-      } else if (_.isEmpty(otpData)) {
-        callback(null, "Otp does not match");
+  async verifyOtp(data) {
+    try {
+      let otpData = await User.findOne({
+        otp: data.otp
+      });
+      if (_.isEmpty(otpData)) {
+        throw { err: "Otp does not match" };
       } else {
-        callback(null, "Otp verify");
+        return "Otp verify";
       }
-    });
+    } catch (error) {
+      throw error;
+    }
   },
 
   loginUser: (data, callback) => {
@@ -139,7 +141,13 @@ module.exports = {
           User.findOne({
             mobile: data.mobile
           }).exec((err, userData) => {
-            callback(null, userData);
+            if (err) {
+              callback(err);
+            } else if (_.isEmpty(userData)) {
+              callback("No User Found For This Mobile Number");
+            } else {
+              callback(null, userData);
+            }
           });
         },
         (userData, callback) => {
@@ -169,7 +177,8 @@ module.exports = {
             },
             {
               $set: {
-                otp: randomNumber
+                otp: randomNumber,
+                expiry: moment().add(1, "d")
               }
             },
             {

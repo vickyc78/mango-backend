@@ -1,7 +1,7 @@
 let mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
-let orderSchema = new Schema({
+let invoiceSchema = new Schema({
   userId: {
     type: Schema.Types.ObjectId,
     index: true
@@ -13,10 +13,15 @@ let orderSchema = new Schema({
   status: {
     type: String,
     enum: ["pending", "inComplete", "complete"],
-    default: pending
+    default: "pending"
   },
   transactionId: {
     type: Schema.Types.ObjectId,
     index: true
+  },
+  invoiceAmount: {
+    type: Number
   }
 });
+
+module.exports = invoiceSchema;

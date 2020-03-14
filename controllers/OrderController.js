@@ -8,4 +8,20 @@ module.exports = router => {
       res.status(500).json(error);
     }
   });
+
+  router.get("/getAllOrder", async (req, res, next) => {
+    try {
+      res.status(200).json(await OrderModel.getAllOrder(req.body));
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  });
+
+  router.get("/getOneOrder", async (req, res, next) => {
+    try {
+      res.status(200).json(await OrderModel.getOneOrder(req.body));
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  });
 };

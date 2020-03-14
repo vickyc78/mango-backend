@@ -12,7 +12,7 @@ let orderSchema = new Schema({
   status: {
     type: String,
     enum: ["pending", "inProcess", "delivered", "completed"],
-    default: pending
+    default: "pending"
   },
   // transactionId: {
   //   type: Schema.Types.ObjectId,
@@ -34,7 +34,13 @@ let orderSchema = new Schema({
         type: Number
       }
     }
-  ]
+  ],
+  orderAddress: {
+    type: String
+  },
+  mobile: {
+    type: Number
+  }
 });
 
 module.exports = orderSchema;

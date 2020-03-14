@@ -22,7 +22,10 @@ let userSchema = new Schema({
     unique: true
   },
   otp: {
-    type: Number
+    type: Number,
+    expiry: {
+      type: Date
+    }
   }
 });
 
