@@ -33,9 +33,9 @@ module.exports = function (router) {
 		})
 	})
 
-	router.get("/verifyOtp", async (req, res, next) => {
+	router.get("/verifyOtp/:otp", async (req, res, next) => {
 		try {
-			res.status(200).json(await UserModel.verifyOtp(req.body))
+			res.status(200).json(await UserModel.verifyOtp(req.params))
 		} catch (error) {
 			res.status(500).json(error)
 		}

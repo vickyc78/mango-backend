@@ -103,7 +103,7 @@ module.exports = {
 						{
 							$set: {
 								otp: randomNumber,
-								expiry: moment().add(1, "d"),
+								expiry: new Date() + 1,
 							},
 						},
 						{
