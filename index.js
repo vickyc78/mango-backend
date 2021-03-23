@@ -16,10 +16,10 @@ env = require("./config/env/development");
 // env = require("./config/env/production");
 console.log("process.env", env);
 
-mongoose.connect(env.dbUrl, {
-  useUnifiedTopology: true,
-  useNewUrlParser: true
-});
+// mongoose.connect(env.dbUrl, {
+//   useUnifiedTopology: true,
+//   useNewUrlParser: true
+// });
 app.use(cors());
 
 app.use(bodyParser.json());
@@ -66,7 +66,7 @@ app.get("/", (request, response) => {
   console.log(Date.now() + " Ping Received");
   response.sendStatus(200);
 });
-app.listen(process.env.PORT);
-setInterval(() => {
-  http.get(`https://spiced-jasper-tugboat.glitch.me/`);
-}, 280000);
+// app.listen(process.env.PORT);
+// setInterval(() => {
+//   http.get(`https://spiced-jasper-tugboat.glitch.me/`);
+// }, 280000);
