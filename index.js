@@ -16,10 +16,10 @@ env = require("./config/env/development");
 // env = require("./config/env/production");
 console.log("process.env", env);
 
-// mongoose.connect(env.dbUrl, {
-//   useUnifiedTopology: true,
-//   useNewUrlParser: true
-// });
+mongoose.connect(env.dbUrl, {
+  useUnifiedTopology: true,
+  useNewUrlParser: true
+});
 app.use(cors());
 
 app.use(bodyParser.json());
