@@ -15,7 +15,9 @@ module.exports = {
     try {
       let totalOrderAmount = 0;
       let singleProduct = await data.product.map(async p => {
+         console.log("KKKKKKKKKK",p)
         let singleProductData = await ProductModel.getOneProduct(p);
+         console.log("singleProductData",singleProductData)
         p.productAmount = p.dozen * singleProductData.amount;
         totalOrderAmount += p.productAmount;
         return p;
@@ -24,6 +26,7 @@ module.exports = {
       data.totalOrderAmount = totalOrderAmount;
       let newOrder = await new Order(data);
       let saveOrder = await newOrder.save();
+       console.log("KKKKKKKKKK",data)
       if (saveOrder) {
         const transactionObj = {
           userId: data.userId,
