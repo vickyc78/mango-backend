@@ -52,6 +52,7 @@ module.exports = {
         console.log("JJJJJJJJJJJJ", p);
         return p;
       });
+      data.orderAddress = data.address;
       data.product = await Promise.all(singleProduct);
       data.totalOrderAmount = totalOrderAmount;
       let newOrder = await new Order(data);
