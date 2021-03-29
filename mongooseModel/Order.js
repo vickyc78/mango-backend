@@ -11,8 +11,8 @@ let orderSchema = new Schema({
   // },
   status: {
     type: String,
-    enum: ["pending", "inProcess", "delivered", "completed"],
-    default: "pending"
+    enum: ["Pending", "InProcess", "Delivered", "Completed", "Rejected"],
+    default: "Pending"
   },
   // transactionId: {
   //   type: Schema.Types.ObjectId,
@@ -35,11 +35,22 @@ let orderSchema = new Schema({
       }
     }
   ],
+  order: {
+    type: String,
+    enum: ["Online", "Cash On Delivery"],
+    default: "Cash On Delivery"
+  },
+  userOrderDescription: {
+    type: String
+  },
   orderAddress: {
     type: String
   },
   mobile: {
-    type: Number
+    type: String
+  },
+  rejectionReason: {
+    type: String
   }
 });
 

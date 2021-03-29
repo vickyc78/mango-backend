@@ -3,7 +3,17 @@ let OrderModel = require("../models/OrderModel");
 module.exports = router => {
   router.post("/saveOrder", async (req, res, next) => {
     try {
-      res.status(200).json(await OrderModel.saveOrder(req.body));
+      let saveOrderData = await OrderModel.saveOrder(req.body);
+      if (
+        saveOrderData == "Mobile number should be 10 digit" ||
+        saveOrderData == "Order Not Placed SuccessFully"
+      ) {
+        res.status(422).send(saveOrderData);
+      } else if (saveOrderData == "Failed To Save User") {
+        res.status(500).send("Something want wrong");
+      } else if (saveOrderData == "Order Placed Successfully") {
+        res.status(200).json(saveOrderData);
+      }
     } catch (error) {
       res.status(500).json(error);
     }
@@ -20,6 +30,16 @@ module.exports = router => {
   router.get("/getOneOrder", async (req, res, next) => {
     try {
       res.status(200).json(await OrderModel.getOneOrder(req.body));
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  });
+
+  router.post("/acceptRejectOrderFromAdmin", async (req, res, next) => {
+    try {
+      res
+        .status(200)
+        .json(await OrderModel.acceptRejectOrderFromAdmin(req.body));
     } catch (err) {
       res.status(500).json(err);
     }

@@ -133,64 +133,109 @@ module.exports = {
     }
   },
 
-  loginUser: (data, callback) => {
-    let randomNumber;
-    async.waterfall(
-      [
-        callback => {
-          User.findOne({
-            mobile: data.mobile
-          }).exec((err, userData) => {
-            if (err) {
-              callback(err);
-            } else if (_.isEmpty(userData)) {
-              callback("No User Found For This Mobile Number");
-            } else {
-              callback(null, userData);
-            }
-          });
-        },
-        (userData, callback) => {
-          if (userData) {
-            randomNumber = Math.floor(1000 + Math.random() * 999);
-            console.log("randomNumber randomNumber", randomNumber);
-            sendOtp.send(
-              `91${userData.mobile}`,
-              "PRIIND",
-              randomNumber,
-              function(error, sendOtpData) {
-                console.log(sendOtpData);
-                if (sendOtpData.type == "success") {
-                  callback(null, userData);
-                } else {
-                  callback(err);
-                }
-              }
-            );
-          }
-        },
-        (userData, callback) => {
-          User.findOneAndUpdate(
-            {
-              _id: userData._id,
-              mobile: userData.mobile
-            },
-            {
-              $set: {
-                otp: randomNumber,
-                expiry: moment().add(1, "d")
-              }
-            },
-            {
-              new: true
-            }
-          ).exec((err, updatedUser) => {
-            callback(err, updatedUser);
-          });
-        }
-      ],
-      callback
-    );
+  // loginUser: (data, callback) => {
+  //   let randomNumber;
+  //   async.waterfall(
+  //     [
+  //       callback => {
+  //         User.findOne({
+  //           mobile: data.mobile
+  //         }).exec((err, userData) => {
+  //           if (err) {
+  //             callback(err);
+  //           } else if (_.isEmpty(userData)) {
+  //             callback("No User Found For This Mobile Number");
+  //           } else {
+  //             callback(null, userData);
+  //           }
+  //         });
+  //       },
+  //       (userData, callback) => {
+  //         if (userData) {
+  //           randomNumber = Math.floor(1000 + Math.random() * 999);
+  //           console.log("randomNumber randomNumber", randomNumber);
+  //           sendOtp.send(
+  //             `91${userData.mobile}`,
+  //             "PRIIND",
+  //             randomNumber,
+  //             function(error, sendOtpData) {
+  //               console.log(sendOtpData);
+  //               if (sendOtpData.type == "success") {
+  //                 callback(null, userData);
+  //               } else {
+  //                 callback(err);
+  //               }
+  //             }
+  //           );
+  //         }
+  //       },
+  //       (userData, callback) => {
+  //         User.findOneAndUpdate(
+  //           {
+  //             _id: userData._id,
+  //             mobile: userData.mobile
+  //           },
+  //           {
+  //             $set: {
+  //               otp: randomNumber,
+  //               expiry: moment().add(1, "d")
+  //             }
+  //           },
+  //           {
+  //             new: true
+  //           }
+  //         ).exec((err, updatedUser) => {
+  //           callback(err, updatedUser);
+  //         });
+  //       }
+  //     ],
+  //     callback
+  //   );
+  // },
+  async registerUser(data) {
+    console.log("SERFGUHJok", /^\d{10}$/.test(data.mobile));
+    if (!data.mobile) {
+      return "Mobile number is required";
+    } else if (
+      (data.mobile.length && data.mobile.length < 10) ||
+      data.mobile.length > 10 ||
+      !/^\d{10}$/.test(data.mobile)
+    ) {
+      return "Mobile number should be 10 digit";
+    }
+
+    let findOneUser = await User.findOne({
+      mobile: data.mobile
+    });
+    if (findOneUser) {
+      return "You are already register with us through this mobile number";
+    } else {
+      let newUser = new User(data);
+      let saveUser = await newUser.save(newUser);
+      if (!saveUser) {
+        return "Something Want Wrong";
+      } else {
+        return saveUser;
+      }
+    }
+  },
+  async loginUser(data) {
+    if (!data.mobile) {
+      return "Mobile number is required";
+    } else if (
+      (data.mobile.length && data.mobile.length < 10) ||
+      data.mobile.length > 10
+    ) {
+      return "Mobile number should be 10 digit";
+    }
+    let findOneUser = await User.findOne({
+      mobile: data.mobile
+    });
+    if (findOneUser) {
+      return "User Exist";
+    } else {
+      return "You are not register with us through this mobile number";
+    }
   }
 };
 

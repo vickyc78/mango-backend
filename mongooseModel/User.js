@@ -7,7 +7,7 @@ let userSchema = new Schema({
     index: true
   },
   mobile: {
-    type: Number,
+    type: String,
     unique: true
   },
   address: [
@@ -17,10 +17,10 @@ let userSchema = new Schema({
       }
     }
   ],
-  email: {
-    type: String,
-    unique: true
-  },
+  // email: {
+  //   type: String,
+  //   unique: true
+  // },
   otp: {
     type: Number,
     expiry: {

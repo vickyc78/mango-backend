@@ -12,13 +12,13 @@ let invoiceSchema = new Schema({
   },
   status: {
     type: String,
-    enum: ["pending", "inComplete", "complete"],
-    default: "pending"
+    enum: ["Pending", "InComplete", "Complete"],
+    default: "Pending"
   },
-  transactionId: {
-    type: Schema.Types.ObjectId,
-    index: true
-  },
+  // transactionId: {
+  //   type: Schema.Types.ObjectId,
+  //   index: true
+  // },
   invoiceAmount: {
     type: Number
   }
