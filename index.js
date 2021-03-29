@@ -59,8 +59,7 @@ app.get("/", function(req, res) {
 });
 
 app.get("/vicky", (req, res) => {
-  res.status(200).send("Hello kapil");
-  // res.status(204).json("Hello Express");
+  res.status(200).send("Hello Express");
 });
 app.get("/", (request, response) => {
   console.log(Date.now() + " Ping Received");
