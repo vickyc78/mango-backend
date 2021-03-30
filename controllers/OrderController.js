@@ -4,14 +4,19 @@ module.exports = router => {
   router.post("/saveOrder", async (req, res, next) => {
     try {
       let saveOrderData = await OrderModel.saveOrder(req.body);
+      console.log("saveOrderData", saveOrderData);
       if (
         saveOrderData == "Mobile number should be 10 digit" ||
-        saveOrderData == "Order Not Placed SuccessFully"
+        saveOrderData == "Order Not Placed SuccessFully" ||
+        saveOrderData == "Address is required"
       ) {
         res.status(422).send(saveOrderData);
       } else if (saveOrderData == "Failed To Save User") {
         res.status(500).send("Something want wrong");
-      } else if (saveOrderData == "Order Placed Successfully") {
+      } else if (
+        saveOrderData == "Order Placed Successfully" ||
+        saveOrderData
+      ) {
         res.status(200).json(saveOrderData);
       }
     } catch (error) {

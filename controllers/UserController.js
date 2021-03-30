@@ -89,8 +89,20 @@ module.exports = function(router) {
         loginUserData == "Mobile number should be 10 digit"
       ) {
         res.status(400).send(loginUserData);
-      } else if (loginUserData == "User Exist") {
+      } else if (loginUserData) {
         res.status(200).send(loginUserData);
+      }
+    } catch (error) {}
+  });
+
+  router.post("/getOneUser", async (req, res) => {
+    try {
+      let getOneUserData = await UserModel.getOneUser(req.body);
+      console.log("getOneUserData getOneUserData", getOneUserData);
+      if (getOneUserData == "No user found") {
+        res.status(422).json(getOneUserData);
+      } else if (getOneUserData) {
+        res.status(200).send(getOneUserData);
       }
     } catch (error) {}
   });

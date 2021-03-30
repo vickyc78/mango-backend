@@ -232,9 +232,19 @@ module.exports = {
       mobile: data.mobile
     });
     if (findOneUser) {
-      return "User Exist";
+      return findOneUser;
     } else {
       return "You are not register with us through this mobile number";
+    }
+  },
+  async getOneUser(data) {
+    let findOneUser = await User.findOne({
+      _id: data.userId
+    });
+    if (findOneUser) {
+      return findOneUser;
+    } else {
+      return "No user found";
     }
   }
 };

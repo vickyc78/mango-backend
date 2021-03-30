@@ -15,13 +15,16 @@ let _ = require("lodash");
 module.exports = {
   async saveOrder(data) {
     try {
-      console.log("saveOrder", data);
+      console.log("saveOrder", data.userId);
       if (
         (data.mobile.length && data.mobile.length < 10) ||
         data.mobile.length > 10 ||
         !/^\d{10}$/.test(data.mobile)
       ) {
         return "Mobile number should be 10 digit";
+      }
+      if (!data.address) {
+        return "Address is required";
       }
       if (!data.userId) {
         let userExist = await User.findOne({
@@ -74,7 +77,7 @@ module.exports = {
         // };
         // const newInvoice = await new Invoice(invoiceObj);
         // const saveInvoice = await newInvoice.save();
-        return "Order Placed Successfully";
+        return data.userId ? "Order Placed Successfully" : saveUser;
         // } else {
         //   throw { err: "Something want wrong" };
         // }
