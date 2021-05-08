@@ -32,9 +32,9 @@ module.exports = router => {
     }
   });
 
-  router.get("/getOneOrder", async (req, res, next) => {
+  router.get("/getOneOrder/:orderId", async (req, res, next) => {
     try {
-      res.status(200).json(await OrderModel.getOneOrder(req.body));
+      res.status(200).json(await OrderModel.getOneOrder(req.params));
     } catch (err) {
       res.status(500).json(err);
     }
@@ -42,9 +42,25 @@ module.exports = router => {
 
   router.post("/acceptRejectOrderFromAdmin", async (req, res, next) => {
     try {
-      res
-        .status(200)
-        .json(await OrderModel.acceptRejectOrderFromAdmin(req.body));
+      let statusData = await OrderModel.acceptRejectOrderFromAdmin(req.body);
+      if (
+        statusData &&
+        (statusData == "Status is required" ||
+          statusData == "Please send valid status" ||
+          statusData == "Please provide rejection reason" ||
+          statusData == "Failed To Generate Invoice")
+      ) {
+        res.status(500).json(statusData);
+      } else {
+        res.status(200).json(statusData);
+      }
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  });
+  router.post("/getAllOrderForAdmin", async (req, res, next) => {
+    try {
+      res.status(200).json(await OrderModel.getAllOrderForAdmin(req.body));
     } catch (err) {
       res.status(500).json(err);
     }

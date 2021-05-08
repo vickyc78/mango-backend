@@ -6,6 +6,11 @@ let bodyParser = require("body-parser");
 
 let cors = require("cors");
 
+const cryptoSecret = require("crypto")
+  .randomBytes(64)
+  .toString("hex");
+console.log("cryptoSecret", cryptoSecret);
+
 let Schema = mongoose.Schema;
 
 let router = express.Router();
@@ -30,10 +35,13 @@ app.listen(port, function() {
   console.log(`App listing on port ${port} !`);
 });
 
+const middleware = require("./config/middleware");
+
 let userRoutes = require("./controllers/UserController");
 let productRoutes = require("./controllers/ProductController");
 let orderRoutes = require("./controllers/OrderController");
 
+app.use(middleware);
 app.use("/User", router);
 app.use("/Product", router);
 app.use("/Order", router);

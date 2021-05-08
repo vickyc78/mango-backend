@@ -106,4 +106,41 @@ module.exports = function(router) {
       }
     } catch (error) {}
   });
+  router.post("/createAdmin", async (req, res) => {
+    try {
+      let createAdminData = await UserModel.createAdmin(req.body);
+      console.log("createAdminData createAdminData", createAdminData);
+      if (createAdminData == "No user found") {
+        res.status(422).json(createAdminData);
+      } else if (createAdminData) {
+        res.status(200).send(createAdminData);
+      }
+    } catch (error) {}
+  });
+  router.post("/loginAdmin", async (req, res) => {
+    try {
+      let loginAdminData = await UserModel.loginAdmin(req.body);
+      console.log("loginAdminData loginAdminData", loginAdminData);
+      if (loginAdminData == "No user found") {
+        res.status(422).json(loginAdminData);
+      } else if (loginAdminData) {
+        res.status(200).send(loginAdminData);
+      }
+    } catch (error) {}
+  });
+  router.post("/getOneAdminDetail", async (req, res) => {
+    try {
+      req.body.userId = req.user._id;
+      let getOneAdminDetailData = await UserModel.getOneAdminDetail(req.body);
+      console.log(
+        "getOneAdminDetailData getOneAdminDetailData",
+        getOneAdminDetailData
+      );
+      if (getOneAdminDetailData == "No user found") {
+        res.status(422).json(getOneAdminDetailData);
+      } else if (getOneAdminDetailData) {
+        res.status(200).send(getOneAdminDetailData);
+      }
+    } catch (error) {}
+  });
 };

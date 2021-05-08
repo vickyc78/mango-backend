@@ -25,11 +25,27 @@ module.exports = {
   },
   async getAllProduct(data) {
     try {
-      let productDetail = await Product.find({});
+      let productDetail = await Product.find({}).sort({ _id: -1 });
       if (_.isEmpty(productDetail)) {
         throw { err: "No Product Found" };
       } else {
         return productDetail;
+      }
+    } catch (error) {
+      throw error;
+    }
+  },
+  async updateProduct(data) {
+    try {
+      let updateProduct = await Product.updateOne(
+        { _id: data.productId },
+        data,
+        { new: true }
+      );
+      if (_.isEmpty(updateProduct)) {
+        throw { err: "No Product Found" };
+      } else {
+        return updateProduct;
       }
     } catch (error) {
       throw error;

@@ -12,7 +12,7 @@ let invoiceSchema = new Schema({
   },
   status: {
     type: String,
-    enum: ["Pending", "InComplete", "Complete"],
+    enum: ["Pending", "Complete", "Cancel"],
     default: "Pending"
   },
   // transactionId: {

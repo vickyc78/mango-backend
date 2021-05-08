@@ -7,6 +7,19 @@ const async = require("async");
 //Register Schema to User
 const User = mongoose.model("User", userSchema);
 
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
+
+const jwt = require("jsonwebtoken");
+
+const dotenv = require("dotenv");
+
+// get config vars
+dotenv.config();
+
+// access config var
+process.env.TOKEN_SECRET_CRYPTO;
+
 module.exports = {
   //   createUser: (data, callback) => {
   //     // console.log("dgfchgjhbkjkl", data);
@@ -245,6 +258,90 @@ module.exports = {
       return findOneUser;
     } else {
       return "No user found";
+    }
+  },
+
+  async createAdmin(data) {
+    let newUser = new User(data);
+    const salt = await bcrypt.genSalt(10);
+    newUser.password = await bcrypt.hash(data.password, salt);
+    console.log("newUser newUser", newUser);
+    newUser.accessToken = jwt.sign(
+      { secretPassword: newUser.password },
+      process.env.TOKEN_SECRET_CRYPTO,
+      {
+        expiresIn: "1d"
+      }
+    );
+    console.log("token token", newUser);
+    let saveUser = await newUser.save();
+    console.log("saveUser", saveUser);
+    if (saveUser) {
+      return saveUser;
+    } else {
+      return "Something went wrong while create admin";
+    }
+  },
+  async loginAdmin(data) {
+    let getOneUser = await User.findOne({
+      email: data.email
+    });
+    console.log("getOneUser", getOneUser);
+    if (!getOneUser) {
+      return "No User Found For this email";
+    }
+    let checkPassword = await bcrypt.compare(
+      data.password,
+      getOneUser.password
+    );
+    console.log("checkPassword", checkPassword);
+    if (checkPassword) {
+      let token = jwt.sign(
+        { secretPassword: getOneUser.password },
+        process.env.TOKEN_SECRET_CRYPTO,
+        {
+          expiresIn: "1d"
+        }
+      );
+      console.log("token token", token);
+      let updateUser = await User.updateOne(
+        {
+          _id: mongoose.Types.ObjectId(getOneUser._id),
+          email: data.email
+        },
+        {
+          $set: {
+            accessToken: token
+          }
+        },
+        {
+          new: true
+        }
+      );
+      if (updateUser && updateUser.nModified) {
+        return {
+          email: getOneUser.email,
+          accessToken: token,
+          name: getOneUser.name
+        };
+      } else {
+        return "Failed to update user";
+      }
+    } else {
+      return "Password is wrong";
+    }
+  },
+  async getOneAdminDetail(data) {
+    console.log("ytguyhijk", data);
+    let findOneAdmin = await User.findOne({
+      _id: mongoose.Types.ObjectId(data.userId),
+      accessLevel: "Admin"
+    });
+    console.log("findOneAdmin", findOneAdmin);
+    if (findOneAdmin) {
+      return findOneAdmin;
+    } else {
+      return "No User Found";
     }
   }
 };

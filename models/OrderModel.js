@@ -93,7 +93,7 @@ module.exports = {
     try {
       let orderDetail = await Order.find({
         userId: data.userId
-      });
+      }).sort({ _id: -1 });
       if (_.isEmpty(orderDetail)) {
         throw { err: "No Order Found" };
       } else {
@@ -107,12 +107,20 @@ module.exports = {
   async getOneOrder(data) {
     try {
       let orderDetail = await Order.findOne({
-        userId: data.userId,
-        _id: data.orderId
-      });
+        // userId: data.userId,
+        _id: mongoose.Types.ObjectId(data.orderId)
+      })
+        .populate("userId")
+        .lean();
       if (_.isEmpty(orderDetail)) {
         throw { err: "No Order Found" };
       } else {
+        let totalDozen = 0;
+        orderDetail.product.forEach(singleProductObj => {
+          totalDozen += singleProductObj.dozen;
+        });
+        orderDetail["totalOrderDozen"] = totalDozen;
+
         return orderDetail;
       }
     } catch (error) {
@@ -120,15 +128,9 @@ module.exports = {
     }
   },
   async acceptRejectOrderFromAdmin(data) {
+    console.log("acceptRejectOrderFromAdmin", data);
     if (!data.status) {
       return "Status is required";
-    }
-    let findOneOrder = await Order.findOne({
-      _id: data.orderId,
-      status: "Pending"
-    });
-    if (!findOneOrder) {
-      return "No Order Found";
     }
     if (data.status == "Pending") {
       return "Please send valid status";
@@ -138,10 +140,17 @@ module.exports = {
         return "Please provide rejection reason";
       }
     }
+    let findOneOrder = await Order.findOne({
+      _id: data.orderId,
+      status: "Pending"
+    });
+    if (!findOneOrder) {
+      return "No Order Found";
+    }
+
     let acceptRejectData = await Order.updateOne(
       {
-        _id: data.orderId,
-        status: "Pending"
+        _id: data.orderId
       },
       data,
       {
@@ -151,18 +160,52 @@ module.exports = {
     if (!acceptRejectData.nModified) {
       return "Failed To Update";
     }
-    let invoiceObj = {
-      userId: findOneOrder.userId,
-      orderId: findOneOrder._id,
-      status: "Complete",
-      invoiceAmount: findOneOrder.totalOrderAmount
-    };
-    let newInvoiceData = new Invoice(invoiceObj);
-    let saveInvoiceData = await newInvoiceData.save();
-    if (saveInvoiceData) {
-      return saveInvoiceData;
+    if (data.status == "Completed") {
+      let invoiceObj = {
+        userId: findOneOrder.userId,
+        orderId: findOneOrder._id,
+        status: "Complete",
+        invoiceAmount: findOneOrder.totalOrderAmount
+      };
+      let newInvoiceData = new Invoice(invoiceObj);
+      let saveInvoiceData = await newInvoiceData.save();
+      if (!saveInvoiceData) {
+        return "Failed To Generate Invoice";
+      }
+    }
+
+    if (acceptRejectData.nModified) {
+      return "Status Changed Successfully";
     } else {
-      return "Failed to save invoice";
+      return "Failed To Update";
+    }
+  },
+  async getAllOrderForAdmin(data) {
+    try {
+      let orderDetail = await Order.find({})
+        .lean()
+        .populate("userId");
+      console.log("orderDetail", orderDetail);
+      orderDetail.forEach(singleOrderObj => {
+        console.log("singleOrderObj", singleOrderObj);
+        let totalDozen = 0;
+        singleOrderObj.product.forEach(singleProductObj => {
+          totalDozen += singleProductObj.dozen;
+          // return totalDozen;
+        });
+        console.log("totalDozen", totalDozen);
+        singleOrderObj["totalOrderDozen"] = totalDozen;
+        console.log("singleOrderObj", singleOrderObj);
+        return singleOrderObj;
+      });
+      console.log("orderDetail orderDetail", orderDetail);
+      if (_.isEmpty(orderDetail)) {
+        throw { err: "No Order Found" };
+      } else {
+        return orderDetail;
+      }
+    } catch (error) {
+      throw error;
     }
   }
 };
