@@ -6,7 +6,11 @@ const nonSecurePaths = [
   "/",
   "/Product/getAllProduct",
   "/Order/saveOrder",
-  "/User/loginAdmin"
+  "/User/loginAdmin",
+  "/User/registerUser",
+  "/User/loginUser",
+  "/User/getOneUser",
+  "/User/createAdmin"
 ];
 module.exports = async function checkUserValidity(req, res, next) {
   console.log("DRFGHBJKL", req.path, req.headers.accesstoken);
