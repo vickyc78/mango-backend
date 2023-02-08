@@ -10,7 +10,8 @@ const nonSecurePaths = [
   "/User/registerUser",
   "/User/loginUser",
   "/User/getOneUser",
-  "/User/createAdmin"
+  "/User/createAdmin",
+  "/Product/saveProduct"
 ];
 module.exports = async function checkUserValidity(req, res, next) {
   console.log("DRFGHBJKL", req.path, req.headers.accesstoken);
