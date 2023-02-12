@@ -318,7 +318,7 @@ module.exports = {
           new: true
         }
       );
-      if (updateUser && updateUser.nModified) {
+      if (updateUser && updateUser.modifiedCount) {
         return {
           email: getOneUser.email,
           accessToken: token,

@@ -11,7 +11,7 @@ let Invoice = mongoose.model("Invoice", invoiceSchema);
 let User = mongoose.model("User", userSchema);
 let ProductModel = require("../models/ProductModel");
 let _ = require("lodash");
-var axios = require("axios").default;
+const unirest = require("unirest");
 
 module.exports = {
   async saveOrder(data) {
@@ -45,7 +45,8 @@ module.exports = {
         }
       }
 
-      let totalOrderAmount = 0;totalDozen=0;
+      let totalOrderAmount = 0;
+      let orderDetails=[]
       let singleProduct = await data.product.map(async p => {
         let singleProductData = await ProductModel.getOneProduct({
           productId: p._id
@@ -53,7 +54,11 @@ module.exports = {
         p.productAmount = p.dozen * singleProductData.amount;
         p.productId = p._id;
         totalOrderAmount += p.productAmount;
-        totalDozen+=p.dozen
+        orderDetails.push({
+          productName:singleProductData.name,
+          dozen:p.dozen,
+          amount:p.productAmount
+        })
         console.log("JJJJJJJJJJJJ", p);
         return p;
       });
@@ -63,19 +68,15 @@ module.exports = {
       let newOrder = await new Order(data);
       let saveOrder = await newOrder.save();
       if (saveOrder) {
-        
+        const req = unirest("GET", `https://api.telegram.org/bot${process.env.bot_token}/sendMessage`);
 
-var options = {
-  method: 'GET',
-  url: `https://api.telegram.org/bot${process.env.bot_token}/sendMessage`,
-  params: {chat_id: process.env.chatId, text: `You have received order of ${totalDozen} dozens of mangoes from this mobile number ${saveOrder.mobile} address of order to be deliver is ${saveOrder.orderAddress} which transaction through ${saveOrder.order} of total order amount is ${saveOrder.totalOrderAmount}`}
-};
+        req.query({ chat_id: process.env.chatId, text: `You have received order of mangoes from this mobile number ${saveOrder.mobile} address of order to be deliver is ${saveOrder.orderAddress} which transaction through ${saveOrder.order} of total order amount is ${saveOrder.totalOrderAmount} order details :- ${JSON.stringify(orderDetails)}`});
 
-await axios.request(options).then(function (response) {
-  console.log(response.data);
-}).catch(function (error) {
-  console.error(error);
-});
+        req.end(function (res) {
+          if (res.error) throw new Error(res.error);
+
+          console.log(res.body);
+        });
         // const transactionObj = {
         //   userId: data.userId,
         //   orderId: saveOrder._id,
