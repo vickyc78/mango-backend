@@ -8,7 +8,7 @@
     "start": "node index.js"
   },
   "engines": {
-    "node": "12.18.0"
+    "node": "16.0.0"
   },
   "author": "kapil",
   "license": "ISC",
