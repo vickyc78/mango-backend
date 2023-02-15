@@ -318,7 +318,8 @@ module.exports = {
           new: true
         }
       );
-      if (updateUser && updateUser.modifiedCount) {
+      console.log("updateUser",updateUser)
+      if (updateUser && (updateUser.modifiedCount|| updateUser.nModified)) {
         return {
           email: getOneUser.email,
           accessToken: token,

@@ -10,6 +10,12 @@ let productSchema = new Schema(
     },
     description: {
       type: String
+    },
+    image:{
+      type:String
+    },
+    fileName:{
+      type:String
     }
   },
   { timestamps: { createdAt: true, updatedAt: true } }

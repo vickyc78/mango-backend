@@ -27,9 +27,8 @@ mongoose.connect(env.dbUrl, {
 });
 app.use(cors());
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 let port = process.env.PORT || env.port;
 app.listen(port, function() {
   console.log(`App listing on port ${port} !`);
