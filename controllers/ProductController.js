@@ -23,6 +23,13 @@ module.exports = router => {
       res.status(500).json(err);
     }
   });
+  router.get("/getAllProductByAdmin", async (req, res, next) => {
+    try {
+      res.status(200).json(await ProductModel.getAllProductByAdmin(req.body));
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  });
   router.post("/updateProduct", async (req, res, next) => {
     try {
       res.status(200).json(await ProductModel.updateProduct(req.body));

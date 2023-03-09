@@ -16,6 +16,11 @@ let productSchema = new Schema(
     },
     fileName:{
       type:String
+    },
+    enable:{
+      type:Boolean,
+      enum:[1,0],
+      default:1
     }
   },
   { timestamps: { createdAt: true, updatedAt: true } }
